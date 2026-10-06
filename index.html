@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie Finder</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="/" class="navbar__logo">
+        <img src="./assets/imdb-logo.png" alt="IMDb">
+    </a>
+
+    <div class="navbar__info">
+
+        <div class="search-wrapper">
+
+            <form class="search-box" id="searchForm">
+
+                <input
+                    id="searchInput"
+                    type="search"
+                    placeholder="Search IMDb"
+                    aria-label="Search movies"
+                >
+
+                <button type="submit" aria-label="Search">
+                    🔍
+                </button>
+
+            </form>
+
+            <div
+                class="search-dropdown"
+                id="searchDropdown"
+            ></div>
+
+        </div>
+
+        <button class="genres-button" type="button">
+            <span>Genres</span>
+            <span>⌄</span>
+        </button>
+
+    </div>
+
+</header>>
+
+
+    <main>
+
+        <section class="hero">
+
+            <img
+                class="hero__poster"
+                src=""
+                alt=""
+            >
+
+            <div class="hero__left-fade"></div>
+            <div class="hero__bottom-fade"></div>
+
+            <div class="hero__details">
+
+                <h1 class="hero__title">
+                    Dune: Part Two
+                </h1>
+
+                <div class="hero__genres">
+                    <span class="genre-tag">Action</span>
+                    <span class="genre-tag">Adventure</span>
+                    <span class="genre-tag">Drama</span>
+                </div>
+
+                <p class="hero__synopsis">
+                    Paul Atreides unites with Chani and the Fremen while
+                    seeking revenge against the conspirators who destroyed
+                    his family.
+                </p>
+
+                <p class="hero__status">
+                    In theaters
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="movies-content">
+
+            <div class="top-picks">
+
+                <!-- Movie cards will be generated with JavaScript -->
+
+            </div>
+
+            <nav class="pagination" aria-label="Movie pages">
+
+                <button class="pagination__arrow" type="button">
+                    ←
+                </button>
+
+                <button class="pagination__page pagination__page--active">
+                    1
+                </button>
+
+                <button class="pagination__page">
+                    2
+                </button>
+
+                <button class="pagination__page">
+                    3
+                </button>
+
+                <span class="pagination__ellipsis">...</span>
+
+                <button class="pagination__page">
+                    25
+                </button>
+
+                <button class="pagination__arrow" type="button">
+                    →
+                </button>
+
+            </nav>
+
+        </section>
+
+    </main>
+
+
+    <footer class="footer">
+        <p>© 2025 by Karyar Studio</p>
+    </footer>
+
+    <script type="module" src="./js/home.js"></script>
+
+
+</body>
+</html>
