@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Movie Details | Movie Finder</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="./index.html" class="navbar__logo">
+        <img src="./assets/imdb-logo.png" alt="IMDb">
+    </a>
+
+    <div class="navbar__info">
+
+        <form class="search-box" id="searchForm">
+
+            <input
+                id="searchInput"
+                type="search"
+                placeholder="Search IMDb"
+                aria-label="Search movies"
+            >
+
+            <button
+                type="submit"
+                aria-label="Search"
+            >
+                🔍
+            </button>
+
+        </form>
+
+        <button
+            class="genres-button"
+            type="button"
+        >
+            <span>Genres</span>
+            <span>⌄</span>
+        </button>
+
+    </div>
+
+</header>
+
+<main class="movie-details">
+
+    <div id="detailsLoading" class="details-loading">
+        Loading movie...
+    </div>
+
+    <div id="detailsError" class="details-error"></div>
+
+    <section
+        id="detailsContent"
+        class="details-content"
+        hidden
+    >
+
+        <div class="details-header">
+
+            <div class="details-title">
+
+                <h1 id="movieTitle"></h1>
+
+                <div class="details-meta">
+                    <span id="movieYear"></span>
+                    <span class="meta-dot">•</span>
+                    <span id="movieCertification"></span>
+                    <span class="meta-dot">•</span>
+                    <span id="movieRuntime"></span>
+                </div>
+
+            </div>
+
+            <div class="details-rating">
+
+                <span class="rating-star">★</span>
+
+                <span id="movieRating"></span>
+
+            </div>
+
+        </div>
+
+        <div class="movie-main">
+
+            <img
+                id="moviePoster"
+                class="movie-poster"
+                src=""
+                alt=""
+            >
+
+            <div class="movie-info">
+
+                <div class="info-row">
+                    <h2>Genre</h2>
+                    <div id="movieGenres"></div>
+                </div>
+
+                <div class="info-row">
+                    <h2>Plot</h2>
+                    <p id="moviePlot"></p>
+                </div>
+
+                <div class="info-row">
+                    <h2>Director</h2>
+                    <p id="movieDirector"></p>
+                </div>
+
+                <div class="info-row">
+                    <h2>Writers</h2>
+                    <p id="movieWriters"></p>
+                </div>
+
+                <div class="info-row">
+                    <h2>Stars</h2>
+                    <p id="movieStars"></p>
+                </div>
+
+                <div
+                    id="movieGallery"
+                    class="movie-gallery"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section
+        class="cast-section"
+        id="castSection"
+        hidden
+    >
+
+        <div class="section-heading">
+            <span></span>
+            <h2>Cast</h2>
+        </div>
+
+        <div
+            id="castList"
+            class="cast-list"
+        ></div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>
+        © 2025 by Karyar Studio
+    </p>
+</footer>
+
+<script
+    type="module"
+    src="./js/details.js"
+></script>
+
+</body>
+</html>

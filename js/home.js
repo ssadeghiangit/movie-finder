@@ -81,7 +81,7 @@ function renderMovies(movies) {
                     </div>
 
                     <a
-                        href="#"
+                        href="./details.html?id=${movie.id}"
                         class="movie-card__details"
                     >
                         View Info
@@ -159,6 +159,10 @@ function renderSearchDropdown(movies) {
             </div>
 
         `;
+
+        result.addEventListener("click", () => {
+    window.location.href = `./details.html?id=${movie.id}`;
+});
 
 
         searchDropdown.appendChild(result);

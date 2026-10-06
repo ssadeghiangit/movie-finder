@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +31,10 @@
                     aria-label="Search movies"
                 >
 
-                <button type="submit" aria-label="Search">
+                <button
+                    type="submit"
+                    aria-label="Search"
+                >
                     🔍
                 </button>
 
@@ -43,105 +47,149 @@
 
         </div>
 
-        <button class="genres-button" type="button">
+        <button
+            class="genres-button"
+            type="button"
+        >
             <span>Genres</span>
             <span>⌄</span>
         </button>
 
     </div>
 
-</header>>
+</header>
 
 
-    <main>
+<main>
 
-        <section class="hero">
+    <section class="hero">
 
-            <img
-                class="hero__poster"
-                src=""
-                alt=""
+        <img
+            class="hero__poster"
+            src=""
+            alt=""
+        >
+
+        <div class="hero__left-fade"></div>
+        <div class="hero__bottom-fade"></div>
+
+        <div class="hero__details">
+
+            <h1 class="hero__title">
+                Dune: Part Two
+            </h1>
+
+            <div class="hero__genres">
+
+                <span class="genre-tag">
+                    Action
+                </span>
+
+                <span class="genre-tag">
+                    Adventure
+                </span>
+
+                <span class="genre-tag">
+                    Drama
+                </span>
+
+            </div>
+
+            <p class="hero__synopsis">
+                Paul Atreides unites with Chani and the Fremen while
+                seeking revenge against the conspirators who destroyed
+                his family.
+            </p>
+
+            <p class="hero__status">
+                In theaters
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <section class="movies-content">
+
+        <div class="top-picks">
+
+            <!-- Movie cards will be generated with JavaScript -->
+
+        </div>
+
+
+        <nav
+            class="pagination"
+            aria-label="Movie pages"
+        >
+
+            <button
+                class="pagination__arrow"
+                type="button"
             >
+                ←
+            </button>
 
-            <div class="hero__left-fade"></div>
-            <div class="hero__bottom-fade"></div>
+            <button
+                class="pagination__page pagination__page--active"
+                type="button"
+            >
+                1
+            </button>
 
-            <div class="hero__details">
+            <button
+                class="pagination__page"
+                type="button"
+            >
+                2
+            </button>
 
-                <h1 class="hero__title">
-                    Dune: Part Two
-                </h1>
+            <button
+                class="pagination__page"
+                type="button"
+            >
+                3
+            </button>
 
-                <div class="hero__genres">
-                    <span class="genre-tag">Action</span>
-                    <span class="genre-tag">Adventure</span>
-                    <span class="genre-tag">Drama</span>
-                </div>
+            <span class="pagination__ellipsis">
+                ...
+            </span>
 
-                <p class="hero__synopsis">
-                    Paul Atreides unites with Chani and the Fremen while
-                    seeking revenge against the conspirators who destroyed
-                    his family.
-                </p>
+            <button
+                class="pagination__page"
+                type="button"
+            >
+                25
+            </button>
 
-                <p class="hero__status">
-                    In theaters
-                </p>
+            <button
+                class="pagination__arrow"
+                type="button"
+            >
+                →
+            </button>
 
-            </div>
+        </nav>
 
-        </section>
+    </section>
 
-
-        <section class="movies-content">
-
-            <div class="top-picks">
-
-                <!-- Movie cards will be generated with JavaScript -->
-
-            </div>
-
-            <nav class="pagination" aria-label="Movie pages">
-
-                <button class="pagination__arrow" type="button">
-                    ←
-                </button>
-
-                <button class="pagination__page pagination__page--active">
-                    1
-                </button>
-
-                <button class="pagination__page">
-                    2
-                </button>
-
-                <button class="pagination__page">
-                    3
-                </button>
-
-                <span class="pagination__ellipsis">...</span>
-
-                <button class="pagination__page">
-                    25
-                </button>
-
-                <button class="pagination__arrow" type="button">
-                    →
-                </button>
-
-            </nav>
-
-        </section>
-
-    </main>
+</main>
 
 
-    <footer class="footer">
-        <p>© 2025 by Karyar Studio</p>
-    </footer>
+<footer class="footer">
 
-    <script type="module" src="./js/home.js"></script>
+    <p>
+        © 2025 by Karyar Studio
+    </p>
 
+</footer>
+
+
+<script
+    type="module"
+    src="./js/home.js"
+></script>
 
 </body>
 </html>
