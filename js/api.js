@@ -19,6 +19,19 @@ export async function searchMovies(query, page = 1) {
     return response.json();
 }
 
+export async function getMoviesByGenre(genreId, page = 1) {
+    const url =
+        `${API_BASE_URL}/discover/movie?with_genres=${genreId}&page=${page}`;
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch movies by genre");
+    }
+
+    return response.json();
+}
+
 
 export async function getMovieDetails(movieId) {
     const url =

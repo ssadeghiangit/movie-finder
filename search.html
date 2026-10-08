@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Search | Movie Finder</title>
+
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+<header class="navbar">
+
+    <a href="./index.html" class="navbar__logo">
+        <img src="./assets/imdb-logo.png" alt="IMDb">
+    </a>
+
+    <div class="navbar__info">
+
+        <form class="search-box" id="searchForm">
+
+            <input
+                id="searchInput"
+                type="search"
+                placeholder="Search IMDb"
+                aria-label="Search movies"
+            >
+
+            <button
+                type="submit"
+                aria-label="Search"
+            >
+                🔍
+            </button>
+
+        </form>
+
+        <button
+            class="genres-button"
+            type="button"
+        >
+            <span>Genres</span>
+            <span>⌄</span>
+        </button>
+
+    </div>
+
+</header>
+
+<main class="search-page">
+
+    <section class="search-header">
+
+        <h1 id="searchTitle">
+            Search Results
+        </h1>
+
+    </section>
+
+    <section class="search-results">
+
+        <div
+            id="searchMovies"
+            class="movies-grid"
+        ></div>
+
+        <div
+            id="searchLoading"
+            class="search-loading"
+        >
+            Loading movies...
+        </div>
+
+        <div
+            id="searchError"
+            class="search-error"
+        ></div>
+
+        <div
+            id="searchEmpty"
+            class="search-empty"
+        >
+            No movies found.
+        </div>
+
+    </section>
+
+    <nav
+        id="searchPagination"
+        class="pagination"
+        aria-label="Search result pages"
+    >
+    </nav>
+
+</main>
+
+<footer class="footer">
+
+    <p>
+        © 2025 by Karyar Studio
+    </p>
+
+</footer>
+
+<script
+    type="module"
+    src="./js/search.js"
+></script>
+
+</body>
+
+</html>

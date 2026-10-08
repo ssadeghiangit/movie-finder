@@ -7,11 +7,6 @@ const searchForm = document.querySelector("#searchForm");
 const searchInput = document.querySelector("#searchInput");
 const searchDropdown = document.querySelector("#searchDropdown");
 
-
-/* ================================
-   Load Home Movies
-================================ */
-
 async function loadMovies() {
 
     try {
@@ -27,10 +22,6 @@ async function loadMovies() {
     }
 }
 
-
-/* ================================
-   Render Movie Cards
-================================ */
 
 function renderMovies(movies) {
 
@@ -98,9 +89,7 @@ function renderMovies(movies) {
 }
 
 
-/* ================================
-   Render Search Dropdown
-================================ */
+
 
 function renderSearchDropdown(movies) {
 
@@ -171,9 +160,7 @@ function renderSearchDropdown(movies) {
 }
 
 
-/* ================================
-   Search Input
-================================ */
+
 
 searchInput.addEventListener("input", async () => {
 
@@ -203,42 +190,22 @@ searchInput.addEventListener("input", async () => {
 });
 
 
-/* ================================
-   Search Submit
-================================ */
 
-searchForm.addEventListener("submit", async (event) => {
 
+searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
-
     const query = searchInput.value.trim();
-
 
     if (!query) {
         return;
     }
 
-
-    try {
-
-        const data = await searchMovies(query);
-
-        renderMovies(data.results);
-
-        searchDropdown.innerHTML = "";
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-
+    window.location.href =
+        `./search.html?query=${encodeURIComponent(query)}`;
 });
 
 
-/* ================================
-   Initial Load
-================================ */
+
 
 loadMovies();

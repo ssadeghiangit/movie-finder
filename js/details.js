@@ -49,8 +49,8 @@ function renderMovieDetails(movie) {
     document.querySelector("#movieRuntime").textContent =
         movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : "N/A";
 
-    document.querySelector("#movieRating").textContent =
-        `${movie.vote_average.toFixed(1)}/10`;
+   document.querySelector("#movieRating").textContent =
+    `${movie.vote_average.toFixed(1)}/10 (${formatVoteCount(movie.vote_count)})`;
 
     const posterElement = document.querySelector("#moviePoster");
 
@@ -137,6 +137,17 @@ function renderCast(cast) {
             `
         )
         .join("");
+}
+function formatVoteCount(count) {
+    if (count >= 1000000) {
+        return `${(count / 1000000).toFixed(1)}M`;
+    }
+
+    if (count >= 1000) {
+        return `${Math.round(count / 1000)}K`;
+    }
+
+    return count;
 }
 
 function showError(message) {
