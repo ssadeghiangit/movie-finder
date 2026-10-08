@@ -18,6 +18,18 @@ export async function searchMovies(query, page = 1) {
 
     return response.json();
 }
+export async function getPopularMovies(page = 1) {
+    const url =
+        `${API_BASE_URL}/movie/popular?page=${page}`;
+
+    const response = await fetch(url, options);
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch popular movies");
+    }
+
+    return response.json();
+}
 
 export async function getMoviesByGenre(genreId, page = 1) {
     const url =

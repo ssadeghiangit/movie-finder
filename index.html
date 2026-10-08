@@ -15,7 +15,7 @@
 <header class="navbar">
 
     <a href="/" class="navbar__logo">
-        <img src="./assets/imdb-logo.png" alt="IMDb">
+        <img src="./assets/IMDB logo.svg" alt="IMDb">
     </a>
 
     <div class="navbar__info">
@@ -122,16 +122,34 @@
 
     <section class="movies-content">
 
-        <div class="top-picks">
+    <div
+        id="homeLoading"
+        class="home-loading"
+    >
+        Loading movies...
+    </div>
 
-            <!-- Movie cards will be generated with JavaScript -->
+    <div
+        id="homeError"
+        class="home-error"
+        hidden
+    ></div>
 
-        </div>
+    <div
+        id="homeEmpty"
+        class="home-empty"
+        hidden
+    >
+        No movies found.
+    </div>
+
+    <div class="top-picks"></div>
 
 
         <nav
+            id="homePagination"
             class="pagination"
-            aria-label="Movie pages"
+            aria-label="Home Movie pages"
         >
 
             <button

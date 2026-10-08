@@ -1,24 +1,46 @@
-import { searchMovies } from "./api.js";
+import {
+    searchMovies,
+    getMovieDetails,
+    getPopularMovies
+} from "./api.js";
 
 
 const moviesContainer = document.querySelector(".top-picks");
 
+const loadingElement = document.querySelector("#homeLoading");
+const errorElement = document.querySelector("#homeError");
+const emptyElement = document.querySelector("#homeEmpty");
+
 const searchForm = document.querySelector("#searchForm");
 const searchInput = document.querySelector("#searchInput");
 const searchDropdown = document.querySelector("#searchDropdown");
+const heroPoster = document.querySelector(".hero__poster");
+const urlParams = new URLSearchParams(window.location.search);
+
+let currentPage = Number(urlParams.get("page")) || 1;const paginationElement = document.querySelector("#homePagination");
+function updatePageUrl() {
+    const url = new URL(window.location);
+
+    url.searchParams.set("page", currentPage);
+
+    window.history.pushState({}, "", url);
+}
 
 async function loadMovies() {
+    showLoading();
 
     try {
+       const data = await getPopularMovies(currentPage);
 
-        const data = await searchMovies("Dune");
-
-        renderMovies(data.results);
+renderMovies(data.results);
+renderPagination(data.total_pages);
 
     } catch (error) {
-
         console.error(error);
+        showError();
 
+    } finally {
+        loadingElement.hidden = true;
     }
 }
 
@@ -26,6 +48,12 @@ async function loadMovies() {
 function renderMovies(movies) {
 
     moviesContainer.innerHTML = "";
+    emptyElement.hidden = true;
+
+    if (!movies || movies.length === 0) {
+    emptyElement.hidden = false;
+    return;
+}
 
     movies.forEach((movie) => {
 
@@ -86,6 +114,73 @@ function renderMovies(movies) {
         moviesContainer.appendChild(movieCard);
 
     });
+}
+
+function renderPagination(totalPages) {
+    paginationElement.innerHTML = "";
+
+    const previousButton = document.createElement("button");
+
+    previousButton.className = "pagination__arrow";
+    previousButton.textContent = "←";
+    previousButton.disabled = currentPage === 1;
+
+   previousButton.addEventListener("click", () => {
+    if (currentPage > 1) {
+        currentPage--;
+
+        const url = new URL(window.location);
+        url.searchParams.set("page", currentPage);
+        window.history.pushState({}, "", url);
+
+        loadMovies();
+    }
+});
+
+    paginationElement.appendChild(previousButton);
+
+    for (let page = 1; page <= Math.min(totalPages, 5); page++) {
+        const pageButton = document.createElement("button");
+
+        pageButton.className = "pagination__page";
+        pageButton.textContent = page;
+
+        if (page === currentPage) {
+            pageButton.classList.add("pagination__page--active");
+        }
+
+     pageButton.addEventListener("click", () => {
+    currentPage = page;
+
+    const url = new URL(window.location);
+    url.searchParams.set("page", currentPage);
+    window.history.pushState({}, "", url);
+
+    loadMovies();
+});
+
+        paginationElement.appendChild(pageButton);
+    }
+
+    const nextButton = document.createElement("button");
+
+    nextButton.className = "pagination__arrow";
+    nextButton.textContent = "→";
+    nextButton.disabled = currentPage === totalPages;
+
+   nextButton.addEventListener("click", () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+
+        const url = new URL(window.location);
+        url.searchParams.set("page", currentPage);
+        window.history.pushState({}, "", url);
+
+        loadMovies();
+    }
+});
+
+    paginationElement.appendChild(nextButton);
 }
 
 
@@ -205,7 +300,33 @@ searchForm.addEventListener("submit", (event) => {
         `./search.html?query=${encodeURIComponent(query)}`;
 });
 
+function showLoading() {
+    loadingElement.hidden = false;
+    errorElement.hidden = true;
+    emptyElement.hidden = true;
+}
 
+function showError() {
+    loadingElement.hidden = true;
+    errorElement.hidden = false;
+    errorElement.textContent = "Failed to load movies.";
+}
+
+async function loadHero() {
+    try {
+        const movie = await getMovieDetails(693134);
+
+        if (movie.backdrop_path) {
+            heroPoster.src =
+                `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+
+            heroPoster.alt = movie.title;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 
 loadMovies();
+loadHero();
