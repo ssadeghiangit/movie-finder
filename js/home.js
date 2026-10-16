@@ -1,8 +1,8 @@
 import {
-    searchMovies,
     getMovieDetails,
     getPopularMovies
 } from "./api.js";
+import { genres } from "./genres-data.js";
 
 
 const moviesContainer = document.querySelector(".top-picks");
@@ -11,20 +11,20 @@ const loadingElement = document.querySelector("#homeLoading");
 const errorElement = document.querySelector("#homeError");
 const emptyElement = document.querySelector("#homeEmpty");
 
-const searchForm = document.querySelector("#searchForm");
-const searchInput = document.querySelector("#searchInput");
-const searchDropdown = document.querySelector("#searchDropdown");
 const heroPoster = document.querySelector(".hero__poster");
+
+const heroTitle = document.querySelector(".hero__title");
+const heroGenres = document.querySelector(".hero__genres");
+const heroSynopsis = document.querySelector(".hero__synopsis");
+const heroStatus = document.querySelector(".hero__status");
+const heroPagination = document.querySelector("#heroPagination");
+
 const urlParams = new URLSearchParams(window.location.search);
 
-let currentPage = Number(urlParams.get("page")) || 1;const paginationElement = document.querySelector("#homePagination");
-function updatePageUrl() {
-    const url = new URL(window.location);
+let currentPage = Number(urlParams.get("page")) || 1;
+const paginationElement = document.querySelector("#homePagination");
 
-    url.searchParams.set("page", currentPage);
 
-    window.history.pushState({}, "", url);
-}
 
 async function loadMovies() {
     showLoading();
@@ -65,49 +65,40 @@ function renderMovies(movies) {
             ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
             : "";
 
-        movieCard.innerHTML = `
+        const genreText = (movie.genre_ids || [])
+            .map((id) => genres.find((g) => g.id === id)?.name)
+            .filter(Boolean)
+            .slice(0, 2)
+            .join(", ") || "Movie";
 
+        const rating = Number.isFinite(Number(movie.vote_average))
+            ? Number(movie.vote_average).toFixed(1)
+            : "N/A";
+
+        movieCard.innerHTML = `
             <img
                 class="movie-card__poster"
                 src="${poster}"
                 alt="${movie.title}"
+                loading="lazy"
             >
-
             <div class="movie-card__info">
-
                 <div>
-
-                    <h3 class="movie-card__title">
-                        ${movie.title}
-                    </h3>
-
-                    <p class="movie-card__genres">
-                        Movie
-                    </p>
-
+                    <h3 class="movie-card__title">${movie.title}</h3>
+                    <p class="movie-card__genres">${genreText}</p>
                 </div>
-
                 <div class="movie-card__actions">
-
                     <div class="movie-card__rating">
-
                         <span>★</span>
-
-                        <span>
-                            ${movie.vote_average.toFixed(1)}
-                        </span>
-
+                        <span>${rating}</span>
                     </div>
-
                     <a
                         href="./details.html?id=${movie.id}"
                         class="movie-card__details"
                     >
                         View Info
                     </a>
-
                 </div>
-
             </div>
         `;
 
@@ -186,119 +177,8 @@ function renderPagination(totalPages) {
 
 
 
-function renderSearchDropdown(movies) {
-
-    searchDropdown.innerHTML = "";
 
 
-    if (movies.length === 0) {
-
-        searchDropdown.innerHTML = `
-            <p class="search-dropdown__empty">
-                No movies found
-            </p>
-        `;
-
-        return;
-    }
-
-
-    movies.slice(0, 5).forEach((movie) => {
-
-        const result = document.createElement("button");
-
-        result.className = "search-dropdown__item";
-
-        result.type = "button";
-
-
-        const poster = movie.poster_path
-            ? `https://image.tmdb.org/t/p/w92${movie.poster_path}`
-            : "";
-
-
-        result.innerHTML = `
-
-            ${
-                poster
-                    ? `
-                        <img
-                            src="${poster}"
-                            alt="${movie.title}"
-                        >
-                    `
-                    : ""
-            }
-
-            <div>
-
-                <h3>
-                    ${movie.title}
-                </h3>
-
-                <span>
-                    ${movie.release_date?.slice(0, 4) || "N/A"}
-                </span>
-
-            </div>
-
-        `;
-
-        result.addEventListener("click", () => {
-    window.location.href = `./details.html?id=${movie.id}`;
-});
-
-
-        searchDropdown.appendChild(result);
-
-    });
-}
-
-
-
-
-searchInput.addEventListener("input", async () => {
-
-    const query = searchInput.value.trim();
-
-
-    if (!query) {
-
-        searchDropdown.innerHTML = "";
-
-        return;
-    }
-
-
-    try {
-
-        const data = await searchMovies(query);
-
-        renderSearchDropdown(data.results);
-
-    } catch (error) {
-
-        console.error(error);
-
-    }
-
-});
-
-
-
-
-searchForm.addEventListener("submit", (event) => {
-    event.preventDefault();
-
-    const query = searchInput.value.trim();
-
-    if (!query) {
-        return;
-    }
-
-    window.location.href =
-        `./search.html?query=${encodeURIComponent(query)}`;
-});
 
 function showLoading() {
     loadingElement.hidden = false;
@@ -311,20 +191,113 @@ function showError() {
     errorElement.hidden = false;
     errorElement.textContent = "Failed to load movies.";
 }
+let heroMovies = [];
+let currentHeroIndex = 0;
+let heroInterval = null;
+
+const HERO_SLIDE_DURATION = 5000;
+const HERO_MOVIE_COUNT = 5;
 
 async function loadHero() {
     try {
-        const movie = await getMovieDetails(693134);
+        const data = await getPopularMovies(1);
 
-        if (movie.backdrop_path) {
-            heroPoster.src =
-                `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+        const movies = data.results
+            .filter((movie) => movie.backdrop_path)
+            .slice(0, HERO_MOVIE_COUNT);
 
-            heroPoster.alt = movie.title;
+        if (movies.length === 0) {
+            return;
         }
+
+        const detailedMovies = await Promise.all(
+            movies.map((movie) => getMovieDetails(movie.id))
+        );
+
+        heroMovies = detailedMovies;
+
+        renderHeroPagination();
+        showHeroSlide(0);
+        startHeroAutoplay();
+
     } catch (error) {
-        console.error(error);
+        console.error("Failed to load hero slider:", error);
     }
+}
+
+function showHeroSlide(index) {
+    if (heroMovies.length === 0) {
+        return;
+    }
+
+    currentHeroIndex = index;
+
+    const movie = heroMovies[currentHeroIndex];
+
+    heroPoster.src =
+        `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+
+    heroPoster.alt = movie.title;
+
+    heroTitle.textContent = movie.title;
+
+    heroGenres.innerHTML = "";
+
+    movie.genres.slice(0, 3).forEach((genre) => {
+        const genreTag = document.createElement("span");
+
+        genreTag.className = "genre-tag";
+        genreTag.textContent = genre.name;
+
+        heroGenres.appendChild(genreTag);
+    });
+
+    heroSynopsis.textContent =
+        movie.overview || "No synopsis available.";
+
+    heroStatus.textContent = movie.status || "";
+
+    const dots = heroPagination.querySelectorAll(".hero__dot");
+
+    dots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === currentHeroIndex;
+
+        dot.classList.toggle("hero__dot--active", isActive);
+        dot.setAttribute("aria-current", isActive ? "true" : "false");
+    });
+}
+
+function renderHeroPagination() {
+    heroPagination.innerHTML = "";
+
+    heroMovies.forEach((movie, index) => {
+        const dot = document.createElement("button");
+
+        dot.type = "button";
+        dot.className = "hero__dot";
+        dot.setAttribute(
+            "aria-label",
+            `Show ${movie.title}`
+        );
+
+        dot.addEventListener("click", () => {
+            showHeroSlide(index);
+            startHeroAutoplay();
+        });
+
+        heroPagination.appendChild(dot);
+    });
+}
+
+function startHeroAutoplay() {
+    clearInterval(heroInterval);
+
+    heroInterval = setInterval(() => {
+        const nextIndex =
+            (currentHeroIndex + 1) % heroMovies.length;
+
+        showHeroSlide(nextIndex);
+    }, HERO_SLIDE_DURATION);
 }
 
 

@@ -1,4 +1,5 @@
 import { searchMovies } from "./api.js";
+import { genres } from "./genres-data.js";
 
 const searchMoviesElement = document.querySelector("#searchMovies");
 const searchTitleElement = document.querySelector("#searchTitle");
@@ -80,9 +81,13 @@ function renderMovies(movies) {
                         ${movie.title}
                     </h3>
 
-                    <p class="movie-card__genres">
-                        ${movie.release_date?.slice(0, 4) || "N/A"}
-                    </p>
+                   <p class="movie-card__genres">
+    ${(movie.genre_ids || [])
+        .map((id) => genres.find((g) => g.id === id)?.name)
+        .filter(Boolean)
+        .slice(0, 2)
+        .join(", ") || "Movie"}
+</p>
 
                 </div>
 

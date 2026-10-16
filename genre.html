@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +7,10 @@
     <title>Genre | Movie Finder</title>
 
     <link rel="stylesheet" href="./css/style.css">
+
+    <script type="module" src="./js/genre.js"></script>
+    <script type="module" src="./js/genres.js"></script>
+    <script type="module" src="./js/search-bar.js"></script>
 </head>
 
 <body>
@@ -15,101 +18,125 @@
 <header class="navbar">
 
     <a href="./index.html" class="navbar__logo">
-        <img src="./assets/imdb-logo.png" alt="IMDb">
+        <img src="./assets/IMDB logo.svg" alt="IMDb">
     </a>
 
     <div class="navbar__info">
 
-        <form class="search-box" id="searchForm">
+        <div class="search-wrapper">
+            <form class="search-box" id="searchForm">
+                <input
+                    id="searchInput"
+                    type="search"
+                    placeholder="Search IMDb"
+                    aria-label="Search movies"
+                >
 
-            <input
-                id="searchInput"
-                type="search"
-                placeholder="Search IMDb"
-                aria-label="Search movies"
-            >
+                <button type="submit" aria-label="Search">
+                    <span aria-hidden="true">⌕</span>
+                </button>
+            </form>
+
+            <div
+                class="search-dropdown"
+                id="searchDropdown"
+            ></div>
+        </div>
+
+        <div class="genres-wrapper">
+            <a href="./genres.html" class="genres-link">Genres</a>
 
             <button
-                type="submit"
-                aria-label="Search"
+                class="genres-button"
+                id="genresButton"
+                type="button"
+                aria-label="Open genres menu"
+                aria-expanded="false"
+                aria-controls="genresDropdown"
             >
-                🔍
+                <span aria-hidden="true">⌄</span>
             </button>
 
-        </form>
-
-        <button
-            class="genres-button"
-            type="button"
-        >
-            <span>Genres</span>
-            <span>⌄</span>
-        </button>
+            <div
+                class="genres-dropdown"
+                id="genresDropdown"
+            ></div>
+        </div>
 
     </div>
-
 </header>
 
-<main class="genre-page">
+<main class="genres-list-page">
 
     <section class="genre-header">
-
-        <h1 id="genreTitle">
-            Action Movies
-        </h1>
-
+        <h1 id="genreTitle">Movies</h1>
     </section>
 
-    <section class="genre-movies">
+    <div class="genres-layout">
 
-        <div
-            id="genreMovies"
-            class="movies-grid"
-        ></div>
+        <aside class="genres-sidebar" aria-label="Movie genres">
+            <nav
+                id="genreSidebarList"
+                class="genre-list"
+                aria-label="Genres"
+            ></nav>
+        </aside>
 
-        <div
-            id="genreLoading"
-            class="genre-loading"
-        >
-            Loading movies...
-        </div>
+        <section class="genre-content">
 
-        <div
-            id="genreError"
-            class="genre-error"
-        ></div>
+           <div class="genre-content__header">
+    <div class="sort-control">
+        <span class="sort-control__label">Sort by:</span>
 
-        <div
-            id="genreEmpty"
-            class="genre-empty"
-        >
-            No movies found.
-        </div>
+        <button
+    id="sortButton"
+    class="sort-control__button"
+    type="button"
+    aria-label="Sort by ranking, highest first"
+    aria-pressed="false"
+>
+    <span>Ranking</span>
 
-    </section>
+    <span class="sort-arrows" aria-hidden="true">
+        <span class="arrow arrow-up">↑</span>
+        <span class="arrow arrow-down">↓</span>
+    </span>
+</button>
+    </div>
 
-    <nav
-        id="genrePagination"
-        class="pagination"
-        aria-label="Genre movie pages"
-    >
-    </nav>
+    <span id="genreMovieCount" aria-live="polite">Movies</span>
+</div>
 
+            <div
+                id="genreMovies"
+                class="genre-movies"
+                aria-live="polite"
+            >
+                <p id="genreLoading" class="genre-loading">
+                    Loading movies...
+                </p>
+
+                <p id="genreError" class="genre-error" hidden></p>
+
+                <p id="genreEmpty" class="genre-empty" hidden>
+                    No movies found.
+                </p>
+            </div>
+
+            <nav
+                id="genrePagination"
+                class="pagination"
+                aria-label="Genre movie pages"
+            ></nav>
+
+        </section>
+
+    </div>
 </main>
 
 <footer class="footer">
-
-    <p>
-        © 2025 by Karyar Studio
-    </p>
-
+    <p>© 2025 by Karyar Studio</p>
 </footer>
 
-<script
-    type="module"
-    src="./js/genre.js"
-></script>
-
 </body>
-
 </html>

@@ -5,19 +5,20 @@ const options = {
         Authorization: "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MjlmYzg0ZmM4NDhiZjYxMDQ2ODRmMjQ4Y2QxMzY3YSIsIm5iZiI6MTc5MTMwNzY1MC4zMTYsInN1YiI6IjZhYzUyZjgyOTEyYzQ0YzU2YmJkNmRlMSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.Um962UT3x_1chTqQfeI5KZKmJtwf34W0DvVtC39o9EI"
     }
 };
-export async function searchMovies(query, page = 1) {
 
+export async function searchMovies(query, page = 1) {
     const url =
         `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`;
 
     const response = await fetch(url, options);
 
     if (!response.ok) {
-        throw new Error("Failed to fetch movies");
+        throw new Error("Failed to search movies");
     }
 
     return response.json();
 }
+
 export async function getPopularMovies(page = 1) {
     const url =
         `${API_BASE_URL}/movie/popular?page=${page}`;
@@ -31,9 +32,13 @@ export async function getPopularMovies(page = 1) {
     return response.json();
 }
 
-export async function getMoviesByGenre(genreId, page = 1) {
+export async function getMoviesByGenre(genreId, page = 1, sortOrder = "desc") {
+    const sortBy = sortOrder === "desc"
+        ? "vote_average.desc"
+        : "vote_average.asc";
+
     const url =
-        `${API_BASE_URL}/discover/movie?with_genres=${genreId}&page=${page}`;
+        `${API_BASE_URL}/discover/movie?with_genres=${genreId}&page=${page}&sort_by=${sortBy}&vote_count.gte=50`;
 
     const response = await fetch(url, options);
 
@@ -43,7 +48,6 @@ export async function getMoviesByGenre(genreId, page = 1) {
 
     return response.json();
 }
-
 
 export async function getMovieDetails(movieId) {
     const url =
