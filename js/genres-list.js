@@ -67,7 +67,6 @@ async function loadGenreMovies(genreId) {
     try {
         const data = await getMoviesByGenre(genreId, 1, sortOrder);
 
-        // از نمایش پاسخ درخواست قدیمی جلوگیری می‌کنیم.
         if (requestId !== latestRequestId) {
             return;
         }
@@ -145,7 +144,7 @@ function createMovieCard(movie) {
     const movieCard = document.createElement("article");
     movieCard.className = "genre-movie-card";
 
-    // Poster
+
     const posterLink = document.createElement("a");
     posterLink.href = `./details.html?id=${movie.id}`;
     posterLink.setAttribute("aria-label", `View ${movie.title} details`);
@@ -163,11 +162,11 @@ function createMovieCard(movie) {
 
     posterLink.appendChild(poster);
 
-    // Details
+
     const details = document.createElement("div");
     details.className = "genre-movie-card__details";
 
-    // Header: title LEFT + rating RIGHT
+
     const header = document.createElement("div");
     header.className = "genre-movie-card__header";
 
@@ -191,7 +190,7 @@ function createMovieCard(movie) {
     rating.append(star, ratingText);
     header.append(title, rating);
 
-    // Meta: year · age
+
     const metadata = document.createElement("p");
     metadata.className = "genre-movie-card__metadata";
     const year = movie.release_date
@@ -199,7 +198,6 @@ function createMovieCard(movie) {
         : "Year unavailable";
     metadata.textContent = `${year} · ${movie.adult ? "18+" : "All audiences"}`;
 
-    // Genre pills
     const genresRow = document.createElement("div");
     genresRow.className = "genre-movie-card__genres";
 
@@ -215,22 +213,18 @@ function createMovieCard(movie) {
         genresRow.appendChild(pill);
     });
 
-    // Overview
     const overview = document.createElement("p");
     overview.className = "genre-movie-card__overview";
     overview.textContent = movie.overview || "No description available.";
 
-    // Director
     const director = document.createElement("p");
     director.className = "genre-movie-card__director";
     director.textContent = "Director: Loading...";
 
-    // Cast
     const cast = document.createElement("p");
     cast.className = "genre-movie-card__cast";
     cast.textContent = "Stars: Loading...";
 
-    // Votes
     const votes = document.createElement("p");
     votes.className = "genre-movie-card__votes";
     votes.textContent = `Votes: ${Number(movie.vote_count || 0).toLocaleString()}`;

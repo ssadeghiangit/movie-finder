@@ -66,16 +66,20 @@
                 <div class="genre-content__header">
                     <div class="sort-control">
                         <span class="sort-control__label">Sort by:</span>
-                        <button
-                            id="sortButton"
-                            class="sort-control__button"
-                            type="button"
-                            aria-label="Sort by ranking, highest first"
-                            aria-pressed="false"
-                        >
-                            <span>Ranking</span>
-                            <span class="arrow" aria-hidden="true">↓</span>
-                        </button>
+                       <button
+         id="sortButton"
+         class="sort-control__button"
+         type="button"
+         aria-label="Sort by ranking, highest first"
+         aria-pressed="false"
+>
+    <span>Ranking</span>
+
+    <span class="sort-arrows" aria-hidden="true">
+        <span class="arrow-up">↑</span>
+        <span class="arrow-down">↓</span>
+    </span>
+</button>
                     </div>
 
                     <span id="genreMovieCount" aria-live="polite">Movies</span>

@@ -205,22 +205,19 @@ function renderMovies(movies) {
             genresRow.appendChild(pill);
         });
 
-        // Overview
         const overview = document.createElement("p");
         overview.className = "genre-movie-card__overview";
         overview.textContent = movie.overview || "No synopsis available.";
 
-        // Director
         const director = document.createElement("p");
         director.className = "genre-movie-card__director";
         director.textContent = "Director: Loading...";
 
-        // Cast
         const cast = document.createElement("p");
         cast.className = "genre-movie-card__cast";
         cast.textContent = "Stars: Loading...";
 
-        // Votes
+
         const votes = document.createElement("p");
         votes.className = "genre-movie-card__votes";
         votes.textContent = `Votes: ${Number(movie.vote_count || 0).toLocaleString()}`;

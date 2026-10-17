@@ -7,8 +7,12 @@ const options = {
 };
 
 export async function searchMovies(query, page = 1) {
-    const url =
-        `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}&page=${page}`;
+    const params = new URLSearchParams({
+        query: query.trim(),
+        page: String(page)
+    });
+
+    const url = `${API_BASE_URL}/search/movie?${params}`;
 
     const response = await fetch(url, options);
 
@@ -20,8 +24,7 @@ export async function searchMovies(query, page = 1) {
 }
 
 export async function getPopularMovies(page = 1) {
-    const url =
-        `${API_BASE_URL}/movie/popular?page=${page}`;
+    const url = `${API_BASE_URL}/movie/popular?page=${page}`;
 
     const response = await fetch(url, options);
 
@@ -32,13 +35,23 @@ export async function getPopularMovies(page = 1) {
     return response.json();
 }
 
-export async function getMoviesByGenre(genreId, page = 1, sortOrder = "desc") {
+export async function getMoviesByGenre(
+    genreId,
+    page = 1,
+    sortOrder = "desc"
+) {
     const sortBy = sortOrder === "desc"
-        ? "vote_average.desc"
-        : "vote_average.asc";
+        ? "popularity.desc"
+        : "popularity.asc";
 
-    const url =
-        `${API_BASE_URL}/discover/movie?with_genres=${genreId}&page=${page}&sort_by=${sortBy}&vote_count.gte=50`;
+    const params = new URLSearchParams({
+        with_genres: String(genreId),
+        page: String(page),
+        sort_by: sortBy,
+        "vote_count.gte": "50"
+    });
+
+    const url = `${API_BASE_URL}/discover/movie?${params}`;
 
     const response = await fetch(url, options);
 
@@ -50,8 +63,11 @@ export async function getMoviesByGenre(genreId, page = 1, sortOrder = "desc") {
 }
 
 export async function getMovieDetails(movieId) {
-    const url =
-        `${API_BASE_URL}/movie/${movieId}?append_to_response=credits,images`;
+    const params = new URLSearchParams({
+        append_to_response: "credits,images,release_dates"
+    });
+
+    const url = `${API_BASE_URL}/movie/${movieId}?${params}`;
 
     const response = await fetch(url, options);
 

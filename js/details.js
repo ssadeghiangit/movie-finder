@@ -2,8 +2,7 @@ import { getMovieDetails } from "./api.js";
 
 const loadingElement = document.querySelector("#detailsLoading");
 const errorElement = document.querySelector("#detailsError");
-const contentElement = document.querySelector("#detailsContent");
-const castSection = document.querySelector("#castSection");
+const contentElement = document.querySelector("#movieDetails");
 
 const params = new URLSearchParams(window.location.search);
 const movieId = params.get("id");
@@ -18,39 +17,70 @@ async function loadMovieDetails() {
         const movie = await getMovieDetails(movieId);
 
         renderMovieDetails(movie);
+
+        loadingElement.hidden = true;
+        errorElement.hidden = true;
+        contentElement.hidden = false;
     } catch (error) {
-        console.error(error);
+        console.error("Failed to load movie details:", error);
         showError("Failed to load movie details.");
     }
 }
 
 function renderMovieDetails(movie) {
-    const director = movie.credits.crew.find(
-        (person) => person.job === "Director"
+    const requiredElements = [
+    "#movieTitle",
+    "#movieTagline",
+    "#movieMeta",
+    "#movieRating",
+    "#moviePoster",
+    "#movieGenres",
+    "#movieOverview",
+    "#movieDirector",
+    "#movieWriters",
+    "#movieStars",
+    "#movieGallery",
+    "#movieCast"
+
+];
+
+const missingElements = requiredElements.filter(
+    (selector) => !document.querySelector(selector)
+);
+
+if (missingElements.length > 0) {
+    throw new Error(
+        `Missing HTML elements: ${missingElements.join(", ")}`
     );
+}
 
-    const writers = movie.credits.crew.filter(
-        (person) =>
-            person.department === "Writing" ||
-            person.job === "Writer"
-    );
 
-    const cast = movie.credits.cast.slice(0, 6);
-    const backdrops = movie.images.backdrops.slice(0, 3);
+    document.querySelector("#movieTitle").textContent =
+        movie.title || "Untitled";
 
-    document.querySelector("#movieTitle").textContent = movie.title;
+    document.querySelector("#movieTagline").textContent =
+        movie.tagline || "";
 
-    document.querySelector("#movieYear").textContent =
-        movie.release_date?.slice(0, 4) || "N/A";
 
-    document.querySelector("#movieCertification").textContent =
-        "N/A";
+    const releaseYear = movie.release_date
+        ? movie.release_date.slice(0, 4)
+        : "N/A";
 
-    document.querySelector("#movieRuntime").textContent =
-        movie.runtime ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m` : "N/A";
+    const ageRating = getAgeRating(movie.release_dates);
 
-   document.querySelector("#movieRating").textContent =
-    `${movie.vote_average.toFixed(1)}/10 (${formatVoteCount(movie.vote_count)})`;
+    const runtime = movie.runtime
+        ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m`
+        : "N/A";
+
+    document.querySelector("#movieMeta").textContent =
+        `${releaseYear}  •  ${ageRating}  •  ${runtime}`;
+
+    // IMDb rating
+    const rating = Number(movie.vote_average) || 0;
+
+    document.querySelector("#movieRating").textContent =
+        `${rating.toFixed(1)}/10 (${formatVoteCount(movie.vote_count || 0)})`;
+
 
     const posterElement = document.querySelector("#moviePoster");
 
@@ -58,101 +88,153 @@ function renderMovieDetails(movie) {
         ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
         : "";
 
-    posterElement.alt = movie.title;
+    posterElement.alt = movie.title || "Movie poster";
 
-    document.querySelector("#movieGenres").innerHTML =
-        movie.genres
-            .map(
-                (genre) => `
-                    <span class="genre-pill">
-                        ${genre.name}
-                    </span>
-                `
-            )
-            .join("");
+    // Genres
+    renderGenres(movie.genres || []);
 
-    document.querySelector("#moviePlot").textContent =
+    // Plot
+    document.querySelector("#movieOverview").textContent =
         movie.overview || "No description available.";
+
+    // Director, writers, and stars
+    const crew = movie.credits?.crew || [];
+    const cast = movie.credits?.cast || [];
+
+    const director = crew.find(
+        (person) => person.job === "Director"
+    );
 
     document.querySelector("#movieDirector").textContent =
         director?.name || "N/A";
 
+    const writerNames = [
+        ...new Set(
+            crew
+                .filter((person) =>
+                    ["Writer", "Screenplay", "Story"].includes(person.job)
+                )
+                .map((person) => person.name)
+        )
+    ];
+
     document.querySelector("#movieWriters").textContent =
-        writers.map((writer) => writer.name).join(", ") || "N/A";
+        writerNames.slice(0, 3).join(" • ") || "N/A";
 
     document.querySelector("#movieStars").textContent =
-        cast.map((person) => person.name).join(", ") || "N/A";
+        cast
+            .slice(0, 3)
+            .map((person) => person.name)
+            .join(" • ") || "N/A";
 
-    renderGallery(backdrops);
-    renderCast(cast);
 
-    loadingElement.hidden = true;
-    contentElement.hidden = false;
-    castSection.hidden = false;
+    renderGallery(movie.images?.backdrops || []);
+    renderCast(movie.credits?.cast || []);
+}
+
+function getAgeRating(releaseDates) {
+    const usRelease = releaseDates?.results?.find(
+        (item) => item.iso_3166_1 === "US"
+    );
+
+    const certification = usRelease?.release_dates?.find(
+        (item) => item.certification?.trim()
+    )?.certification;
+
+    return certification || "NR";
+}
+
+function renderGenres(genres) {
+    const genresElement = document.querySelector("#movieGenres");
+
+    genresElement.replaceChildren();
+
+    for (const genre of genres) {
+        const genreElement = document.createElement("span");
+
+        genreElement.className = "genre-pill";
+        genreElement.textContent = genre.name;
+
+        genresElement.append(genreElement);
+    }
+}
+
+function renderCast(cast) {
+    const castElement = document.querySelector("#movieCast");
+
+    castElement.replaceChildren();
+
+    const mainCast = cast
+        .filter((person) => person.name && person.profile_path)
+        .slice(0, 6);
+
+    for (const person of mainCast) {
+        const card = document.createElement("article");
+        card.className = "cast-card";
+
+        const imageWrapper = document.createElement("div");
+        imageWrapper.className = "cast-card__image";
+
+        const image = document.createElement("img");
+        image.src =
+            `https://image.tmdb.org/t/p/w185${person.profile_path}`;
+        image.alt = person.name;
+        image.loading = "lazy";
+
+        const name = document.createElement("p");
+        name.className = "cast-card__name";
+        name.textContent = person.name;
+
+        const character = document.createElement("p");
+        character.className = "cast-card__character";
+        character.textContent = person.character || "";
+
+        imageWrapper.append(image);
+        card.append(imageWrapper, name, character);
+        castElement.append(card);
+    }
+
+    castElement.closest(".cast-section").hidden =
+        mainCast.length === 0;
 }
 
 function renderGallery(backdrops) {
     const galleryElement = document.querySelector("#movieGallery");
 
-    galleryElement.innerHTML = backdrops
-        .map(
-            (backdrop) => `
-                <img
-                    src="https://image.tmdb.org/t/p/w780${backdrop.file_path}"
-                    alt="Scene from the movie"
-                >
-            `
-        )
-        .join("");
+    galleryElement.replaceChildren();
+
+    for (const backdrop of backdrops.slice(0, 3)) {
+        const image = document.createElement("img");
+
+        image.src =
+            `https://image.tmdb.org/t/p/w780${backdrop.file_path}`;
+
+        image.alt = "Scene from the movie";
+        image.loading = "lazy";
+
+        galleryElement.append(image);
+    }
+
+    galleryElement.hidden = galleryElement.children.length === 0;
 }
 
-function renderCast(cast) {
-    const castListElement = document.querySelector("#castList");
-
-    castListElement.innerHTML = cast
-        .map(
-            (person) => `
-                <article class="cast-card">
-
-                    ${
-                        person.profile_path
-                            ? `
-                                <img
-                                    src="https://image.tmdb.org/t/p/w500${person.profile_path}"
-                                    alt="${person.name}"
-                                >
-                            `
-                            : `
-                                <div class="cast-card__placeholder">
-                                    No Image
-                                </div>
-                            `
-                    }
-
-                    <h3>${person.name}</h3>
-
-                    <p>${person.character || "N/A"}</p>
-
-                </article>
-            `
-        )
-        .join("");
-}
 function formatVoteCount(count) {
-    if (count >= 1000000) {
-        return `${(count / 1000000).toFixed(1)}M`;
+    if (count >= 1_000_000) {
+        return `${(count / 1_000_000).toFixed(1)}M`;
     }
 
-    if (count >= 1000) {
-        return `${Math.round(count / 1000)}K`;
+    if (count >= 1_000) {
+        return `${Math.round(count / 1_000)}K`;
     }
 
-    return count;
+    return String(count);
 }
 
 function showError(message) {
     loadingElement.hidden = true;
+    contentElement.hidden = true;
     errorElement.textContent = message;
+    errorElement.hidden = false;
 }
 
 loadMovieDetails();
