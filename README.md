@@ -1,18 +1,12 @@
 
 # پروژه Movie Finder
 
-**توسعه‌دهنده:** سعید صادقیان
 
 ## معرفی پروژه
 
 Movie Finder یک وب‌اپلیکیشن برای جست‌وجو، کشف و مشاهده اطلاعات فیلم‌ها است که با استفاده از HTML، CSS و JavaScript توسعه داده شده است.
 
 این برنامه با اتصال به API سرویس The Movie Database (TMDB)، اطلاعات فیلم‌ها را دریافت می‌کند و در صفحات مختلف به کاربر نمایش می‌دهد.
-
-## لینک‌های پروژه
-
-- **مخزن GitHub:** [مشاهده کد منبع پروژه](https://github.com/ssadeghiangit/movie-finder)
-- **نسخه آنلاین (Live Demo):** به‌زودی منتشر می‌شود.
 
 ## امکانات پروژه
 
@@ -106,7 +100,9 @@ movie-finder/
 
 ## تنظیم API
 
-این پروژه برای دریافت اطلاعات فیلم‌ها از سرویس [The Movie Database (TMDB)](https://www.themoviedb.org/) استفاده می‌کند.
+این پروژه برای دریافت اطلاعات فیلم‌ها از سرویس 
+[The Movie Database (TMDB)](https://www.themoviedb.org/)
+استفاده می‌کند.
 
 برای عملکرد صحیح درخواست‌ها، باید اعتبارنامه معتبر و مناسب برای نوع استفاده در فایل `js/api.js` تنظیم شده باشد.
 
@@ -122,5 +118,8 @@ movie-finder/
 
 **سعید صادقیان**
 
-- [مخزن پروژه در GitHub](https://github.com/ssadeghiangit/movie-finder)
-- [پروفایل GitHub](https://github.com/ssadeghiangit)
+## لینک‌های پروژه
+
+- **نسخه آنلاین (Live Demo):** [مشاهده Movie Finder](https://splendorous-rugelach-4c9fd8.netlify.app/)
+- **مخزن پروژه در GitHub:** [مشاهده کدهای پروژه](https://github.com/ssadeghiangit/movie-finder)
+- **پروفایل توسعه‌دهنده:** [مشاهده پروفایل GitHub](https://github.com/ssadeghiangit)
